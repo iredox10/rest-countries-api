@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import Header from "./Header";
 import { Link } from "react-router-dom";
+import { DarkMode } from "../context/modeContext";
 
 const Home = () => {
   const [countries, setCountries] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [FilteredCountries, setFilteredCountries] = useState("");
   const [filterQuery, setFilterQuery] = useState("");
+
+  const {darkMode, setDarkMode} = useContext(DarkMode)
 
   const formatNumber = Intl.NumberFormat('en')
 
@@ -43,15 +46,17 @@ const Home = () => {
     setFilteredCountries(filterResult);
   }, [filterQuery, countries]);
   return (
-    <div>
+    <div className={darkMode ? 'dark' : ''}>
+      <div className='dark:bg-dark-color'>
       <Header />
-      <div className="bg-white shadow-lg m-5 flex items-center gap-5 px-8 py-3 rounded-md">
-        <FaMagnifyingGlass />
+      <div className="md:flex justify-between items-center ">
+      <div className="bg-white dark:bg-card-color shadow-lg m-5 flex items-center gap-5 px-8 py-3 rounded-md">
+        <FaMagnifyingGlass className="dark:text-white"/>
         <input
           type="text"
           placeholder="Search for a country..."
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full p-2 border-none outline-none"
+          className="w-full dark:text-white dark:bg-card-color p-2 border-none outline-none"
         />
       </div>
 
@@ -59,7 +64,7 @@ const Home = () => {
         <select
           name="filter"
           id="filter"
-          className="bg-white p-4 shadow-md"
+          className="bg-white dark:bg-card-color dark:text-white p-4 shadow-md"
           onChange={(e) => setFilterQuery(e.target.value)}
         >
           <option selected disabled>
@@ -72,13 +77,13 @@ const Home = () => {
           <option value="Oceania">Oceania</option>
         </select>
       </div>
-
-      <div className="mx-6">
+</div>
+      <div className="mx-6 dark:bg-dark-color">
         {countries && (
-          <div className="flex flex-col p-7">
+          <div className="md:grid grid-cols-4 gap-16 dark:bg-dark-color min-h-screen">
             {FilteredCountries.length > 0
-              ? FilteredCountries.map((country) => (
-                  <div className="bg-white shadow-md my-4 rounded-md">
+              ? FilteredCountries.map((country,i) => (
+                  <div className="bg-white shadow-lg my-4 rounded-md dark:bg-card-color dark:text-white" key={i}>
                     <Link to={`/country/${country.name.common}`}>
                       <img
                         src={country.flags.png}
@@ -113,7 +118,7 @@ const Home = () => {
           </div>
         )}
       </div>
-    </div>
+ </div>   </div>
   );
 };
 
